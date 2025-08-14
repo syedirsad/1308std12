@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adarsh Science Stream Result Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --physics: #3b82f6;
+            --chemistry: #8b5cf6;
+            --biology: #10b981;
+            --maths: #f59e0b;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            color: var(--light);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 30% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+        
+        .science-heading {
+            font-family: 'Roboto Slab', serif;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        .header-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 2.5rem 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-gradient::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        .logo-container {
+            background: white;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+            border: 3px solid var(--biology);
+        }
+        
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.6);
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        .subject-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        
+        .rank-badge {
+            background: linear-gradient(135deg, var(--accent) 0%, #d946ef 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(219, 39, 119, 0.3);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 10px;
+            background: #334155;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-out;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+        }
+        
+        .modal-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 100%);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            font-weight: 300;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s ease;
+        }
+        
+        .close-button:hover {
+            color: var(--primary-light);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        .stat-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .strength-card {
+            border-left: 4px solid var(--biology);
+        }
+        
+        .weakness-card {
+            border-left: 4px solid var(--accent);
+        }
+        
+        .glow {
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.5);
+        }
+        
+        .top-performers {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-top: 2px solid #334155;
+            padding: 1.5rem;
+        }
+        
+        .top-badge {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .top-badge-1 {
+            background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+            color: #7c2d12;
+        }
+        
+        .top-badge-2 {
+            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+            color: #1f2937;
+        }
+        
+        .top-badge-3 {
+            background: linear-gradient(135deg, #fcd34d 0%, #b45309 100%);
+            color: #fef3c7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti container -->
+    <div id="confetti-container"></div>
+    
+    <!-- Celebration Message for Top Rankers -->
+    <div id="celebration-message" class="fixed top-10 left-0 right-0 z-1100 flex justify-center" style="display: none;">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-full shadow-xl flex items-center">
+            <i class="fas fa-crown text-2xl mr-3"></i>
+            <span class="text-xl font-bold">Congratulations Top Ranker! You're Among the Best!</span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <!-- Header with gradient background -->
+            <div class="header-gradient text-center">
+                <div class="logo-container">
+                    <img src="https://raw.githubusercontent.com/idealmaxhub-bit/logo/refs/heads/main/logo.png" 
+                         alt="Adarsh Educational Campus Logo">
+                </div>
+                
+                <h1 class="text-3xl md:text-4xl font-bold mt-4 tracking-tight science-heading">SCIENCE STREAM RESULT PORTAL</h1>
+                <p class="mt-2 text-indigo-200 font-medium">Adarsh Educational Campus - Class 12</p>
+                
+                <div class="absolute bottom-0 left-0 w-full flex justify-center">
+                    <div class="w-24 h-1 bg-white opacity-30 rounded-full mb-4"></div>
+                </div>
+            </div>
+            
+            <!-- Main content -->
+            <div class="p-6 md:p-8 relative">
+                <!-- Search Form -->
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-8">
+                    <div class="md:col-span-2">
+                        <label for="exam" class="block text-sm font-medium text-indigo-200 mb-2">Exam</label>
+                        <div class="relative">
+                            <select id="exam" class="w-full px-4 py-3 border border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-800 text-white appearance-none">
+                                <option value="NEET">NEET</option>
+                                <option value="JEE">JEE</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="medium" class="block text-sm font-medium text-indigo-200 mb-2">Medium</label>
+                        <div class="relative">
+                            <select id="medium" class="w-full px-4 py-3 border border-gray-600 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-800 text-white appearance-none">
+                                <option value="English">English</option>
+                                <option value="Gujarati">Gujarati</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="rollNumber" class="block text-sm font-medium text-indigo-200 mb-2">Roll Number</label>
+                        <div class="relative">
+                            <input type="text" id="rollNumber" placeholder="e.g., 01" class="w-full px-4 py-3 border border-gray-600 rounded-xl shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 bg-slate-800 text-white">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button id="searchButton" class="w-full h-full flex items-center justify-center py-3 px-4 rounded-xl text-white font-bold transition-all duration-300 shadow-lg hover:shadow-xl search-btn">
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Display Area -->
+                <div id="resultContainer" class="mt-8" style="display: none;">
+                    <div id="resultContent" class="space-y-6">
+                        <!-- Result data will be injected here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top Performers at the Bottom -->
+            <div class="top-performers">
+                <h3 class="text-2xl font-bold text-center mb-6 science-heading text-indigo-300">TOP PERFORMERS</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-slate-800 p-5 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="top-badge top-badge-1">1</div>
+                            <h4 class="font-bold text-lg text-amber-200">Rana Simranben</h4>
+                        </div>
+                        <div class="pl-2">
+                            <p class="text-slate-400">NEET - English</p>
+                            <div class="mt-2 text-2xl font-bold text-amber-300">265</div>
+                            <p class="text-xs text-slate-400">Total Marks</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 p-5 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="top-badge top-badge-2">2</div>
+                            <h4 class="font-bold text-lg text-slate-200">Saiyad Isma</h4>
+                        </div>
+                        <div class="pl-2">
+                            <p class="text-slate-400">NEET - English</p>
+                            <div class="mt-2 text-2xl font-bold text-slate-100">252</div>
+                            <p class="text-xs text-slate-400">Total Marks</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 p-5 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="top-badge top-badge-3">3</div>
+                            <h4 class="font-bold text-lg text-amber-200">Abda Tanjina</h4>
+                        </div>
+                        <div class="pl-2">
+                            <p class="text-slate-400">NEET - English</p>
+                            <div class="mt-2 text-2xl font-bold text-amber-300">222</div>
+                            <p class="text-xs text-slate-400">Total Marks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="bg-slate-900 border-t border-slate-800 px-6 py-4 text-center">
+                <p class="text-sm text-slate-400">© 2023 Adarsh Educational Campus. Empowering Future Scientists</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Messages -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <div class="mb-5">
+            <div class="bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                <i class="fas fa-exclamation-circle text-indigo-400 text-2xl"></i>
+            </div>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-200 mb-3">Notification</h2>
+        <p id="modalMessage" class="text-slate-300 mb-6"></p>
+        <button onclick="closeModal()" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-colors duration-200 w-full max-w-xs mx-auto">
+            OK
+        </button>
+      </div>
+    </div>
+
+    <script>
+        (function() {
+            // Raw CSV data for Class 12 students
+            const neetGujaratiCsv = `Roll No,Name,Total Marks,Correct Answers,Incorrect Answers,Not attempted,PHYSICS ,CHEMISTRY ,BIOLOGY
+06,Bhatti Saniya Daudkhan,84.0,27,24,39,7.0,45.0,32.0
+07,Kazi Sohabanu Aarifmahammad,48.0,25,52,13,-8.0,19.0,37.0
+08,Malek Jannatunnisha Tanvirmahammad,92.0,36,52,2,-8.0,20.0,80.0
+09,Malek Nigarbanu Mustakmohammad,153.0,40,7,43,-3.0,57.0,99.0
+10,Patel Aafiyaben Talhabhai,173.0,44,3,43,0.0,78.0,95.0
+11,Pathan Aksabanu Imrankhan,99.0,26,5,59,-1.0,36.0,64.0
+12,Pathan Seemakhatun Yunuskhan,146.0,41,18,31,9.0,46.0,91.0
+13,Rana Farhatjahan Jamiyatkhan,63.0,24,33,33,8.0,9.0,46.0
+14,Rana Salehaben Sajidkhan,AB,AB,AB,AB,AB,AB,AB
+15,Rathod Akshabanu Jakirhusen,71.0,28,41,21,9.0,23.0,39.0
+16,Rathod Alfiya Ikbalbhai,28.0,17,40,33,5.0,13.0,10.0
+17,Rathod Namira Nuruddin,69.0,27,39,24,22.0,28.0,19.0
+18,Saiyad Aayeshbanu Husainali,166.0,43,6,41,3.0,65.0,98.0
+19,Saiyad Tubakhatun MahammadIqbal,146.0,40,14,36,16.0,61.0,69.0
+20,Sanghariyat Alviraben Rasulbhai,164.0,44,12,34,17.0,61.0,86.0
+21,Shekh Jasminben Zakirhushain,111.0,37,37,16,8.0,43.0,60.0
+22,Shekh Zinatparveen Ashirulhaq,123.0,34,13,43,0.0,56.0,67.0
+23,Solanki Sayma Rasulbhai,89.0,34,47,9,1.0,32.0,56.0
+24,Vahora Fatimaben Asifbhai,62.0,24,34,32,15.0,3.0,44.0
+25,Vahora Sobiya Shakilbhai,58.0,25,42,23,4.0,11.0,43.0
+26,Valand Tanvi Hasmukhbhai,169.0,47,19,24,4.0,60.0,105.0
+27,Diwan Rehan Iqbalsha,138.0,43,34,13,18.0,49.0,71.0
+28,Kaji Mahammad Arsil Inayatmiya,118.0,35,22,33,18.0,44.0,56.0
+29,Kaji Mo.Adib Anishahemad,55.0,18,17,55,0.0,13.0,42.0
+30,Malek Muhammad Aasimuddin,62.0,25,38,27,-8.0,37.0,33.0
+31,Pathan Junedkhan Asadullakhan,50.0,18,22,50,-5.0,11.0,44.0
+32,Vahora MohammadZaid Javedbhai,47.0,21,37,32,5.0,30.0,12.0
+`;
+            
+            const jeeEnglishCsv = `Roll No,Name,Total Marks,Correct Answers,Incorrect Answers,Not attempted,PHYSICS ,CHEMISTRY ,MATHS
+03,Babi Iqra Mustufakhan,71.0,21,13,56,23.0,27.0,21.0
+06,Malek Saimabanu Akhtarhusen,68.0,24,28,38,23.0,27.0,18.0
+23,Ansari Aamir Abdulbari,27.0,13,25,52,0.0,23.0,4.0
+26,Kazi Sahilmiya Arifmiya,38.0,13,14,63,17.0,9.0,12.0
+29,Pathan Ruhankhan Muktasirullakhan,14.0,18,58,14,-3.0,15.0,2.0
+31,Rangrej Rumaan Sohel,137.0,38,15,37,34.0,63.0,40.0
+32,Rathod Ayan Sikandarkhan,88.0,28,24,38,17.0,40.0,31.0
+33,Saiyad Mahammad Husain  Hazaratali,54.0,16,10,64,14.0,18.0,22.0
+36,Saiyed Mo Zaid Imtiyazbhai,59.0,21,25,44,2.0,43.0,14.0
+38,Siddiqui Mohammad Affan Mohammad Aslam,41.0,19,35,36,7.0,20.0,14.0
+41,Vagheal Sejan Sirajbhai,96.0,30,24,36,29.0,45.0,22.0`;
+
+            const jeeGujaratiCsv = `Roll No,Name,Total Marks,Correct Answers,Incorrect Answers,Not attempted,PHYSICS ,CHEMISTRY ,MATHS
+01,MALEK ZAINAB A.,74.0,24,22,44,1.0,46.0,27.0
+02,pathan Kanizfatema M.,57.0,16,7,67,16.0,29.0,12.0
+03,Rathod Viraj H,89.0,28,23,39,45.0,32.0,12.0
+04,Shaikh Ayan husen I,57.0,28,55,7,0.0,37.0,20.0
+05,Shaikh Mo.Husen I,50.0,26,54,10,0.0,16.0,34.0`;
+
+            const neetEnglishCsv = `Roll No,Name,Total Marks,Correct Answers,Incorrect Answers,Not attempted,PHYSICS ,CHEMISTRY ,BIOLOGY
+01,Abda Alvina Majidhusen,144.0,41,20,29,21.0,50.0,73.0
+02,Abda Tanjina Akbar,222.0,59,14,17,34.0,73.0,115.0
+04,Kazi Foziya Tarishmahammad,210.0,55,10,25,31.0,81.0,98.0
+05,Malek Fazilat  Kaiyumkhan,105.0,29,11,50,26.0,22.0,57.0
+07,Malek Tehmina Mustakim,147.0,41,17,32,15.0,44.0,88.0
+08,Malik Aarmin Riyazkhan,143.0,39,13,38,26.0,29.0,88.0
+09,Memon Sadiya Fatana Imranbhai,81.0,23,11,56,15.0,18.0,48.0
+10,Parmar Aamena Remtubha,144.0,38,8,44,12.0,39.0,93.0
+11,Parmar Saniya Nitubha,166.0,46,18,26,12.0,64.0,90.0
+12,Rana Aashiyabanu Vijaysinh,113.0,35,27,28,3.0,34.0,76.0
+13,Rana Reenaben Sandeepsingh,136.0,38,16,36,27.0,36.0,73.0
+14,Rana Sabiha Vijaysing ,186.0,51,18,21,15.0,66.0,105.0
+15,Rana Sana Samir,181.0,49,15,26,25.0,56.0,100.0
+16,Rana Simranben Sahidkhan,265.0,69,11,10,77.0,82.0,106.0
+17,Saiyad Isma Sajidali,252.0,64,4,22,48.0,88.0,116.0
+18,Sheikh Mahuenur Hussainsha,110.0,31,14,45,9.0,25.0,76.0
+19,Shekh Mahenoor Salimbhai,191.0,53,21,16,26.0,65.0,100.0
+20,Vahora Aafiyaben Yasinbhai,119.0,33,13,44,0.0,44.0,75.0
+21,Vhora Aiynaben Sajidbhai,176.0,48,16,26,19.0,52.0,105.0
+22,Vohra Zaynab Azizbhai ,219.0,58,13,19,49.0,50.0,120.0
+24,Ansari Afrojhussain Azimuddin,72.0,20,8,62,11.0,9.0,52.0
+25,Dukanwala Mo Nouman Iqbal,65.0,27,43,20,33.0,11.0,21.0
+27,Mewati Mahmmad Raees Hanif Husen,127.0,35,13,42,9.0,43.0,75.0
+28,Mirza Aatifbeg Yavarbeg,94.0,28,18,44,8.0,7.0,79.0
+30,Rana Jargish Rajeshkumar,30.0,16,34,40,24.0,-1.0,7.0
+34,Saiyad Sabbirali Niyazali,47.0,27,61,2,12.0,15.0,20.0
+35,Saiyad Rehan ali Faruk ali,80.0,30,40,20,1.0,34.0,45.0
+37,Shaikh Muhammadali Mo Sabir,81.0,24,15,51,11.0,37.0,33.0
+39,Tank Alfazbhai Azruddin,144.0,41,20,29,36.0,41.0,67.0
+40,Tekrawala Jainulabedin Zakirhusen,117.0,32,11,47,0.0,37.0,80.0
+`;
+            
+            /**
+             * Parses a CSV string into an array of objects.
+             * @param {string} csvText The raw CSV data.
+             * @param {string} exam The exam type (e.g., 'NEET', 'JEE').
+             * @param {string} medium The medium (e.g., 'English', 'Gujarati').
+             * @returns {Array<Object>} An array of student data objects.
+             */
+            function parseCsv(csvText, exam, medium) {
+                const lines = csvText.trim().split('\n');
+                if (lines.length <= 1) return []; // Handle empty or header-only files
+                const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, '').toLowerCase());
+                const data = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',').map(v => v.trim().replace(/"/g, ''));
+                    if (values.length !== headers.length) continue; // Skip malformed lines
+
+                    // Skip rows with 'AB' for attendance
+                    if (values[3].toUpperCase() === 'AB') continue;
+
+                    const correctAnswers = parseInt(values[headers.indexOf('correct answers')]);
+                    const incorrectAnswers = parseInt(values[headers.indexOf('incorrect answers')]);
+                    
+                    // Calculate total marks based on the new scoring logic: +4 for correct, -1 for incorrect.
+                    const totalMarks = (correctAnswers * 4) + (incorrectAnswers * -1);
+
+                    const student = {
+                        exam,
+                        medium,
+                        rollNo: values[headers.indexOf('roll no')],
+                        name: values[headers.indexOf('name')],
+                        totalMarks: totalMarks,
+                        correctAnswers: correctAnswers,
+                        incorrectAnswers: incorrectAnswers,
+                        notAttempted: parseInt(values[headers.indexOf('not attempted')]),
+                    };
+
+                    // Add subject-specific marks, handling different headers
+                    if (exam === 'NEET') {
+                        student.physics = parseFloat(values[headers.indexOf('physics')]);
+                        student.chemistry = parseFloat(values[headers.indexOf('chemistry')]);
+                        student.biology = parseFloat(values[headers.indexOf('biology')]);
+                    } else if (exam === 'JEE') {
+                        student.physics = parseFloat(values[headers.indexOf('physics')]);
+                        student.chemistry = parseFloat(values[headers.indexOf('chemistry')]);
+                        student.maths = parseFloat(values[headers.indexOf('maths')]);
+                    }
+                    data.push(student);
+                }
+                return data;
+            }
+
+            // Combine and parse all data for Class 12
+            let allStudentsData = [
+                ...parseCsv(jeeEnglishCsv, 'JEE', 'English'),
+                ...parseCsv(jeeGujaratiCsv, 'JEE', 'Gujarati'),
+                ...parseCsv(neetEnglishCsv, 'NEET', 'English'),
+                ...parseCsv(neetGujaratiCsv, 'NEET', 'Gujarati')
+            ];
+            
+            // Calculate All Adarsh Rank (AAR) - FIXED RANKING ALGORITHM
+            function calculateAAR(students) {
+                // Sort students by totalMarks in descending order
+                students.sort((a, b) => b.totalMarks - a.totalMarks);
+
+                // Assign ranks properly (handle ties)
+                let currentRank = 1;
+                let previousScore = -1;
+                let skip = 0;
+                
+                for (let i = 0; i < students.length; i++) {
+                    if (students[i].totalMarks === previousScore) {
+                        // Same rank as previous student
+                        students[i].allAdarshRank = currentRank;
+                        skip++;
+                    } else {
+                        // New rank
+                        currentRank += skip;
+                        skip = 1;
+                        students[i].allAdarshRank = currentRank;
+                        previousScore = students[i].totalMarks;
+                    }
+                }
+            }
+            
+            // Recalculate ranks with the fixed algorithm
+            calculateAAR(allStudentsData);
+            
+            // Get DOM elements
+            const examSelect = document.getElementById('exam');
+            const mediumSelect = document.getElementById('medium');
+            const rollNumberInput = document.getElementById('rollNumber');
+            const searchButton = document.getElementById('searchButton');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultContent = document.getElementById('resultContent');
+            const modal = document.getElementById('myModal');
+            const modalMessage = document.getElementById('modalMessage');
+            const confettiContainer = document.getElementById('confetti-container');
+            const celebrationMessage = document.getElementById('celebration-message');
+
+            /**
+             * Displays a custom modal with a message.
+             * @param {string} message The message to display.
+             */
+            function showModal(message) {
+                modalMessage.textContent = message;
+                modal.style.display = 'flex';
+            }
+            
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+            
+            // Create confetti effect
+            function createConfetti() {
+                const colors = ['#4f46e5', '#ec4899', '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444'];
+                const count = 150;
+                
+                for (let i = 0; i < count; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                    confetti.style.width = Math.random() * 15 + 8 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    // Random shapes
+                    if (Math.random() > 0.5) {
+                        confetti.style.borderRadius = '50%';
+                    } else if (Math.random() > 0.7) {
+                        confetti.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                        confetti.style.borderRadius = '20%';
+                    }
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    // Remove confetti after animation completes
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 5000);
+                }
+            }
+
+            // Event listener for the search button
+            searchButton.addEventListener('click', () => {
+                const exam = examSelect.value;
+                const medium = mediumSelect.value;
+                const rollNumber = rollNumberInput.value.trim();
+
+                if (!rollNumber) {
+                    showModal("Please enter a Roll Number.");
+                    return;
+                }
+
+                // Find the student in the combined data
+                const foundStudent = allStudentsData.find(student => 
+                    student.exam === exam &&
+                    student.medium === medium &&
+                    student.rollNo === rollNumber
+                );
+
+                if (foundStudent) {
+                    // Hide any previous celebration
+                    celebrationMessage.style.display = 'none';
+                    
+                    // Display the results
+                    displayResult(foundStudent);
+                    
+                    // Special celebration for top 10 rankers
+                    if (foundStudent.allAdarshRank <= 10) {
+                        celebrationMessage.style.display = 'flex';
+                        setTimeout(() => {
+                            celebrationMessage.style.display = 'none';
+                        }, 5000);
+                        createConfetti();
+                    }
+                } else {
+                    // Show error message
+                    resultContainer.style.display = 'none';
+                    showModal("Student not found. Please check the Exam, Medium, and Roll Number.");
+                }
+            });
+
+            /**
+             * Generates a suggestion/analysis for a subject based on marks.
+             * @param {string} subject The name of the subject.
+             * @param {number} marks The marks obtained in the subject.
+             * @param {string} exam The exam type to determine maximum marks.
+             * @returns {string} The analysis and suggestion text.
+             */
+            function getSubjectAnalysis(subject, marks, exam) {
+                // Maximum marks per subject is 120 (30 questions * 4 marks each)
+                const maxMarks = 120;
+                const percentage = (marks / maxMarks) * 100;
+                let analysis = '';
+
+                if (percentage >= 85) {
+                    analysis = `<span class="font-semibold text-green-400">Exceptional Mastery!</span> Your understanding is outstanding. Consider mentoring peers.`;
+                } else if (percentage >= 70) {
+                    analysis = `<span class="font-semibold text-blue-400">Strong Command.</span> Solid foundation. Focus on advanced concepts for perfection.`;
+                } else if (percentage >= 55) {
+                    analysis = `<span class="font-semibold text-yellow-400">Good Understanding.</span> Fundamentals are clear. Practice application-based problems.`;
+                } else if (percentage >= 40) {
+                    analysis = `<span class="font-semibold text-orange-400">Developing Skills.</span> Focus on core concepts. Regular revision needed.`;
+                } else {
+                    analysis = `<span class="font-semibold text-red-400">Needs Attention.</span> Requires foundational strengthening. Seek teacher guidance.`;
+                }
+                
+                return analysis;
+            }
+
+            /**
+             * Generates 360-degree analysis for the student
+             * @param {Object} student The student data object
+             * @returns {string} HTML for the analysis section
+             */
+            function generate360Analysis(student) {
+                // Calculate strengths and weaknesses
+                let strengths = [];
+                let weaknesses = [];
+                
+                if (student.exam === 'NEET') {
+                    const subjects = [
+                        {name: 'Physics', score: student.physics, color: 'text-blue-400'},
+                        {name: 'Chemistry', score: student.chemistry, color: 'text-purple-400'},
+                        {name: 'Biology', score: student.biology, color: 'text-green-400'}
+                    ];
+                    
+                    // Sort subjects by score to find strongest and weakest
+                    subjects.sort((a, b) => b.score - a.score);
+                    
+                    strengths = subjects.slice(0, 1);
+                    weaknesses = subjects.slice(-1);
+                } else {
+                    const subjects = [
+                        {name: 'Physics', score: student.physics, color: 'text-blue-400'},
+                        {name: 'Chemistry', score: student.chemistry, color: 'text-purple-400'},
+                        {name: 'Maths', score: student.maths, color: 'text-amber-400'}
+                    ];
+                    
+                    // Sort subjects by score to find strongest and weakest
+                    subjects.sort((a, b) => b.score - a.score);
+                    
+                    strengths = subjects.slice(0, 1);
+                    weaknesses = subjects.slice(-1);
+                }
+                
+                // Generate HTML
+                let html = `
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-slate-200 mb-4 flex items-center">
+                            <i class="fas fa-chart-network text-indigo-400 mr-2"></i>
+                            360° Performance Analysis
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="strength-card bg-slate-800 p-5 rounded-xl">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-green-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-bolt text-green-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-lg text-green-300">Your Strengths</h4>
+                                </div>
+                                <ul class="space-y-2">
+                `;
+                
+                strengths.forEach(subject => {
+                    html += `
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="${subject.color} font-medium">${subject.name}</span> - 
+                            <span class="ml-1">Strong conceptual understanding</span>
+                        </li>
+                    `;
+                });
+                
+                html += `
+                                </ul>
+                                <div class="mt-4 bg-slate-900 p-3 rounded-lg">
+                                    <p class="text-sm text-green-300">
+                                        <i class="fas fa-lightbulb mr-2"></i>
+                                        Focus on these areas to maintain your competitive edge
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="weakness-card bg-slate-800 p-5 rounded-xl">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-pink-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-exclamation-triangle text-pink-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-lg text-pink-300">Areas to Improve</h4>
+                                </div>
+                                <ul class="space-y-2">
+                `;
+                
+                weaknesses.forEach(subject => {
+                    html += `
+                        <li class="flex items-center">
+                            <i class="fas fa-exclamation-circle text-red-500 mr-2"></i>
+                            <span class="${subject.color} font-medium">${subject.name}</span> - 
+                            <span class="ml-1">Needs conceptual reinforcement</span>
+                        </li>
+                    `;
+                });
+                
+                html += `
+                                </ul>
+                                <div class="mt-4 bg-slate-900 p-3 rounded-lg">
+                                    <p class="text-sm text-pink-300">
+                                        <i class="fas fa-book-medical mr-2"></i>
+                                        Dedicate 30 extra minutes daily to these subjects
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 bg-slate-800 p-5 rounded-xl">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-indigo-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-chart-line text-indigo-400"></i>
+                                </div>
+                                <h4 class="font-bold text-lg text-indigo-300">Strategic Action Plan</h4>
+                            </div>
+                            <ul class="space-y-2 text-slate-300">
+                                <li class="flex items-start">
+                                    <i class="fas fa-calendar-check text-indigo-500 mt-1 mr-2"></i>
+                                    <span>Create a structured study schedule with dedicated time for each subject</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-flask text-indigo-500 mt-1 mr-2"></i>
+                                    <span>Focus on practical application of concepts through experiments and problem-solving</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-users text-indigo-500 mt-1 mr-2"></i>
+                                    <span>Participate in study groups to strengthen collaborative learning</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-book-open text-indigo-500 mt-1 mr-2"></i>
+                                    <span>Solve previous 5 years' question papers for exam pattern familiarity</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                return html;
+            }
+
+            /**
+             * Generates the HTML for the result display.
+             * @param {Object} student The student data object.
+             */
+            function displayResult(student) {
+                let subjectMarksHtml = '';
+                let analysisHtml = '';
+                
+                // Calculate percentages for progress bars
+                const physicsPercentage = Math.min(100, Math.max(0, (student.physics / 120) * 100));
+                const chemistryPercentage = Math.min(100, Math.max(0, (student.chemistry / 120) * 100));
+                const bioMathsPercentage = Math.min(100, Math.max(0, (student.exam === 'NEET' ? (student.biology / 120) : (student.maths / 120)) * 100));
+                const totalPercentage = Math.min(100, Math.max(0, (student.totalMarks / 360) * 100));
+
+                if (student.exam === 'NEET') {
+                    subjectMarksHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-blue-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-atom text-blue-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Physics</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-blue-400 mb-2">${student.physics}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-blue-500" style="width: ${physicsPercentage}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-purple-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-flask text-purple-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Chemistry</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-purple-400 mb-2">${student.chemistry}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-purple-500" style="width: ${chemistryPercentage}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-green-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-dna text-green-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Biology</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-green-400 mb-2">${student.biology}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-green-500" style="width: ${bioMathsPercentage}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    analysisHtml = `
+                        <div class="space-y-4 p-5 bg-slate-800 rounded-xl">
+                            <h4 class="text-xl font-bold text-slate-200 mb-2 flex items-center">
+                                <i class="fas fa-microscope text-indigo-400 mr-2"></i>
+                                Subject Analysis
+                            </h4>
+                            <div class="space-y-3">
+                                <p class="text-slate-300"><span class="font-bold text-blue-400">Physics:</span> ${getSubjectAnalysis('PHYSICS', student.physics, student.exam)}</p>
+                                <p class="text-slate-300"><span class="font-bold text-purple-400">Chemistry:</span> ${getSubjectAnalysis('CHEMISTRY', student.chemistry, student.exam)}</p>
+                                <p class="text-slate-300"><span class="font-bold text-green-400">Biology:</span> ${getSubjectAnalysis('BIOLOGY', student.biology, student.exam)}</p>
+                            </div>
+                        </div>
+                    `;
+                } else if (student.exam === 'JEE') {
+                    subjectMarksHtml = `
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-blue-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-atom text-blue-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Physics</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-blue-400 mb-2">${student.physics}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-blue-500" style="width: ${physicsPercentage}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-purple-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-flask text-purple-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Chemistry</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-purple-400 mb-2">${student.chemistry}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-purple-500" style="width: ${chemistryPercentage}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="subject-card p-5">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-amber-900 p-2 rounded-lg mr-3">
+                                        <i class="fas fa-calculator text-amber-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-200">Maths</h4>
+                                </div>
+                                <div class="text-3xl font-bold text-amber-400 mb-2">${student.maths}</div>
+                                <div class="text-sm text-slate-400 mb-2">Out of 120</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill bg-amber-500" style="width: ${bioMathsPercentage}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    analysisHtml = `
+                        <div class="space-y-4 p-5 bg-slate-800 rounded-xl">
+                            <h4 class="text-xl font-bold text-slate-200 mb-2 flex items-center">
+                                <i class="fas fa-calculator text-indigo-400 mr-2"></i>
+                                Subject Analysis
+                            </h4>
+                            <div class="space-y-3">
+                                <p class="text-slate-300"><span class="font-bold text-blue-400">Physics:</span> ${getSubjectAnalysis('PHYSICS', student.physics, student.exam)}</p>
+                                <p class="text-slate-300"><span class="font-bold text-purple-400">Chemistry:</span> ${getSubjectAnalysis('CHEMISTRY', student.chemistry, student.exam)}</p>
+                                <p class="text-slate-300"><span class="font-bold text-amber-400">Maths:</span> ${getSubjectAnalysis('MATHS', student.maths, student.exam)}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Add glow class if top 10 ranker (without bouncing)
+                const isTopRanker = student.allAdarshRank <= 10;
+                const resultCardClass = isTopRanker ? "result-card glow" : "result-card";
+                
+                resultContent.innerHTML = `
+                    <div class="${resultCardClass} p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row items-center justify-between border-b border-slate-700 pb-6 mb-6">
+                            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                                <div class="bg-indigo-900 w-16 h-16 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user-astronaut text-indigo-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-slate-200">${student.name}</h2>
+                                    <p class="text-slate-400">Roll No: ${student.rollNo}</p>
+                                </div>
+                            </div>
+                            <div class="text-center md:text-right">
+                                <p class="text-slate-400">Exam: <span class="font-semibold text-slate-200">${student.exam} (${student.medium})</span></p>
+                                <div class="mt-2">
+                                    <span class="bg-indigo-900 text-indigo-300 text-sm font-semibold px-3 py-1 rounded-full">Class 12 Science</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-slate-800 p-5 rounded-xl shadow">
+                                <h3 class="text-lg font-bold text-slate-200 mb-4 flex items-center">
+                                    <i class="fas fa-chart-pie text-indigo-400 mr-2"></i>
+                                    Performance Metrics
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Correct Answers:</span>
+                                        <span class="font-bold text-green-400">${student.correctAnswers}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Incorrect Answers:</span>
+                                        <span class="font-bold text-red-400">${student.incorrectAnswers}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Not Attempted:</span>
+                                        <span class="font-bold text-amber-400">${student.notAttempted}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-slate-400">Accuracy:</span>
+                                        <span class="font-bold text-blue-400">${((student.correctAnswers / (student.correctAnswers + student.incorrectAnswers)) * 100 || 0).toFixed(1)}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-indigo-900 to-purple-900 p-5 rounded-xl border border-indigo-800">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-bold text-slate-200 flex items-center">
+                                        <i class="fas fa-trophy text-amber-400 mr-2"></i>
+                                        All Adarsh Rank
+                                    </h3>
+                                    <div class="rank-badge px-4 py-2">
+                                        <span class="text-2xl font-bold">${student.allAdarshRank}</span>
+                                    </div>
+                                </div>
+                                <p class="text-slate-400 text-sm">Rank among all Adarsh students</p>
+                                ${isTopRanker ? `<div class="mt-3 text-xs bg-amber-900 text-amber-200 px-2 py-1 rounded">Top 10 Performer!</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <!-- Subject marks -->
+                        ${subjectMarksHtml}
+                        
+                        <!-- Total marks -->
+                        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 rounded-2xl mb-8 text-white glow">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-xl font-bold mb-1">Total Marks</h3>
+                                    <p class="text-indigo-200">Out of 360</p>
+                                </div>
+                                <div class="text-4xl font-bold">${student.totalMarks}</div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="progress-bar bg-indigo-700">
+                                    <div class="progress-fill bg-white" style="width: ${totalPercentage}%"></div>
+                                </div>
+                                <div class="flex justify-between mt-2 text-indigo-200 text-sm">
+                                    <span>0</span>
+                                    <span>360</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Subject Analysis -->
+                        ${analysisHtml}
+                        
+                        <!-- 360 Degree Analysis -->
+                        ${generate360Analysis(student)}
+                    </div>
+                `;
+                resultContainer.style.display = 'block';
+                
+                // Animate progress bars
+                setTimeout(() => {
+                    document.querySelectorAll('.progress-fill').forEach(el => {
+                        el.style.width = el.style.width;
+                    });
+                }, 300);
+            }
+        })();
+    </script>
+</body>
+</html>
